@@ -1,0 +1,77 @@
+name: Build and release pack
+
+on:
+  push:
+    # only trigger on pushing a tag, thats
+    # starts with 'v' e.g. v5.10
+    tags: [v*]
+
+jobs:
+  build:
+    name: Build Pack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ZIP
+        run: |
+          sudo apt update
+          sudo apt install zip -y
+
+      - name: Zipping the pack
+        run: >
+          zip pack.zip
+          README.md
+          LICENSE
+          assets
+          pack.mcmeta
+          pack.png
+
+      - name: Save pack artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: §5Schmanguage§r§m
+          path: pack.zip
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Display structure of files
+        run: ls -laR
+
+      - name: Get pack artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: §5Schmanguage§r§m
+
+      - name: Display structure of files
+        run: ls -laR
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          prerelease: true
+
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./pack.zip
+          asset_name: Schmanguage.zip
+          asset_content_type: application/zip
