@@ -11,6 +11,10 @@ Example:
 
 It is based of the the default language "English - United States" (`en_us`).
 
+## Download
+
+The pack can be downloaded in the [releases](../../releases) page.
+
 ## Credits
 
 - The main idea is from the german YouTuber "[Halbzwilling](https://youtube.com/@halbzwilling)"... aka. Noah aka. Schmuu aka. Schmoah aka. Halbdrilling aka. Mapmaking aka. DerDerPaintNieFertigMacht aka. Unnoahmal
