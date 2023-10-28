@@ -18,4 +18,4 @@ The pack can be downloaded in the [releases](../../releases) page.
 ## Credits
 
 - The main idea is from the german YouTuber "[Halbzwilling](https://youtube.com/@halbzwilling)"... aka. Noah aka. Schmuu aka. Schmoah aka. Halbdrilling aka. Mapmaking aka. DerDerPaintNieFertigMacht aka. Unnoahmal
-- The letters in the MojangStudios font used in the `mojangstudios.png` are originally designed by [u/Luxing23](https://reddit.com/u/luxing23) from [this post](https://www.reddit.com/r/Minecraft/comments/i64ly6/)
+- The letters in the MojangStudios font used in the [`mojangstudios.png`](/assets/minecraft/textures/gui/title/mojangstudios.png) are originally designed by [u/Luxing23](https://reddit.com/u/luxing23) from [this post](https://www.reddit.com/r/Minecraft/comments/i64ly6/)
