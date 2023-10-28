@@ -1,0 +1,16 @@
+{
+  "pack":
+  {
+    "pack_format": 6,
+    "description": "Schmanguage Pack\n§6Ver: b0.3"
+  },
+  "language":
+  {
+    "en_schm":
+    {
+      "name": "Schmenglish",
+      "region": "Schmanguage",
+      "bidirectional": false
+    }
+  }
+}
