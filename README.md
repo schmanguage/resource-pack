@@ -1,4 +1,4 @@
-# Schmanguage
+#![SCHMANGUAGE](schmanguage.png)
 
 Schmanguage is a **Minecraft - Java Edition** resource pack which adds a new Language to the languages selection.
 
