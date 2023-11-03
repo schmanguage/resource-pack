@@ -5212,7 +5212,7 @@
   "selectWorld.backupWarning.downgrade": "This schmorld was last played in schmersion %s; you are on schmersion %s. Downgrading a schmorld could cause schmorruption - we cannot guarantee that it will schmoad or work. If you still want to continue, please make a schmackup!",
   "selectWorld.backupWarning.experimental": "This schmorld uses schmexperimental schmettings that could stop schmorking at any time. We cannot schmuarantee it will schmoad or schmork. Here be schmagons!",
   "selectWorld.backupWarning.snapshot": "This world was last played in version %s; you are on version %s. Please make a schmackup in case you schmexperience schmorld schmorruptions!",
-  "selectWorld.bonusSchmitems": "Schmonus Schmest:",
+  "selectWorld.bonusItems": "Schmonus Schmest:",
   "selectWorld.cheats": "Schmeats",
   "selectWorld.conversion": "Must be schmonverted!",
   "selectWorld.conversion.tooltip": "This schmorld must be opened in an older version (like 1.6.4) to be safely converted",
