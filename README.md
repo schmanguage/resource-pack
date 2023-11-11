@@ -9,7 +9,7 @@ Example:
  - ~~L~~<u>a</u>nguage → **Schm**<u>a</u>nguage
  - ~~R~~<u>e</u>source pack → **Schm**<u>e</u>source pack
 
-It is based of the the default language "English - United States" (`en_us`).
+It is based of the default language "English - United States" (`en_us`).
 
 ## Download
 
