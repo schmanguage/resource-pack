@@ -1,0 +1,47 @@
+name: Sync Resource Pack
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - assets/**
+      - pack.mcmeta
+      - pack.png
+
+jobs:
+  sync_fabric_mod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout resource pack repo
+        uses: actions/checkout@v4
+        with:
+          path: resource-pack
+      - name: Checkout fabric-mod repo
+        uses: actions/checkout@v4
+        with:
+          path: fabric-mod
+          repository: schmanguage/fabric-mod
+          token: ${{secrets.FABRIC_MOD}}
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+      - name: Copy Files
+        run: |
+          ls -laR fabric-mod
+          ls -laR resource-pack
+          cp -vfR \
+            resource-pack/assets \
+            resource-pack/pack.mcmeta \
+            resource-pack/pack.png \
+            fabric-mod/src/main/resources/resourcepacks/schmanguage/
+      - name: Commit and push Files
+        run: |
+          cd fabric-mod
+          git add src/main/resources/resourcepacks
+          git commit -m "sync: resource-pack assets -> fabric-mod"\
+            -m "Co-Authored-By: ${{github.event.commits[0].author.name}} <${{github.actor_id}}+${{github.actor}}@users.noreply.github.com>" \
+            -m "Action: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          git log -1 --full-diff -p .
+        # git push
