@@ -29,7 +29,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
       - name: Copy Files
         run: |
-          ls -laR fabric-mod
+          ls -laR fabric-mod/src/main/resources/resourcepacks/schmanguage
           ls -laR resource-pack
           cp -vfR \
             resource-pack/assets \
@@ -41,7 +41,7 @@ jobs:
           cd fabric-mod
           git add src/main/resources/resourcepacks
           git commit -m "sync: resource-pack assets -> fabric-mod"\
-            -m "Co-Authored-By: ${{github.event.commits[0].author.name}} <${{github.actor_id}}+${{github.actor}}@users.noreply.github.com>" \
+            -m "Co-authored-by: ${{github.event.commits[0].author.name}} <${{github.actor_id}}+${{github.actor}}@users.noreply.github.com>" \
             -m "Action: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           git log -1 --full-diff -p .
           git push
