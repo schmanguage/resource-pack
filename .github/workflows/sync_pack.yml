@@ -44,4 +44,4 @@ jobs:
             -m "Co-Authored-By: ${{github.event.commits[0].author.name}} <${{github.actor_id}}+${{github.actor}}@users.noreply.github.com>" \
             -m "Action: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           git log -1 --full-diff -p .
-        # git push
+          git push
