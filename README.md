@@ -4,7 +4,7 @@ Schmanguage is a **Minecraft - Java Edition** resource pack which adds a new Lan
 
 ---
 
-In this language almost all words start with a "schm" prefix and replace all consonants until, but not including, the first vowal.
+In this language almost all words start with a "schm" prefix and replace all consonants until, but not including, the first vowel.
 Example:
  - ~~L~~<u>a</u>nguage → **Schm**<u>a</u>nguage
  - ~~R~~<u>e</u>source pack → **Schm**<u>e</u>source pack
