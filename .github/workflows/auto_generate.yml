@@ -1,0 +1,66 @@
+name: Auto Generate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: auto-generate
+
+env:
+  version_manifest: https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
+
+jobs:
+  generate:
+    name: Generate
+    runs-on: ubuntu-latest
+    outputs:
+      latest_release: ${{ steps.data.outputs.latest_release }}
+      current_release: ${{ steps.data.outputs.current_release }}
+      release_url: ${{ steps.data.outputs.release_url }}
+      latest_snapshot: ${{ steps.data.outputs.latest_snapshot }}
+      current_snapshot: ${{ steps.data.outputs.current_snapshot }}
+      snapshot_url: ${{ steps.data.outputs.snapshot_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: resource-pack
+      - name: Install dependencies
+        run: |
+          apt update
+          apt install jq -y
+      - name: Get data
+        id: data
+        run: |
+          curl ${{env.version_manifest}} --output versions.json
+          latest_release=$(jq --compact-output --join-output .latest.release versions.json)"
+          current_release=1.20.2
+          release_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_release\").url" versions.json)
+          latest_snapshot=$(jq --compact-output --join-output .latest.snapshot versions.json)"
+          current_snapshot=0.1
+          snapshot_url=$(jq --compact-output --join-output ".versions[] |$ select(.id == \"$latest_snapshot\").url" versions.json)
+
+          echo "latest_release=$latest_release" >> $GITHUB_OUTPUT
+          echo "current_release=$current_release" >> $GITHUB_OUTPUT
+          echo "release_url=$release_url" >> $GITHUB_OUTPUT
+          echo "latest_snapshot=$latest_snapshot" >> $GITHUB_OUTPUT
+          echo "current_snapshot=$current_snapshot" >> $GITHUB_OUTPUT
+          echo "snapshot_url=$snapshot_url" >> $GITHUB_OUTPUT
+
+  generate_release:
+    name: Generate Release
+    needs: generate
+    if: needs.generate.outputs.latest_release != needs.generate.outputs.current_release
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo Hello Release ${{ needs.generate.outputs.latest_release }}
+          echo curl ${{ needs.generate.outputs.release_url }}
+
+  generate_snapshot:
+    name: Generate Snapshot
+    needs: generate
+    if: needs.generate.outputs.latest_snapshot != needs.generate.outputs.current_snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo Hello Snapshot${{ needs.generate.outputs.latest_snapshot }}
+          echo curl ${{ needs.generate.outputs.snapshot_url }}
