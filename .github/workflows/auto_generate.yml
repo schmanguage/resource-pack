@@ -36,7 +36,7 @@ jobs:
           release_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_release\").url" versions.json)
           latest_snapshot=$(jq --compact-output --join-output .latest.snapshot versions.json)
           current_snapshot=0.1
-          snapshot_url=$(jq --compact-output --join-output ".versions[] |$ select(.id == \"$latest_snapshot\").url" versions.json)
+          snapshot_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_snapshot\").url" versions.json)
 
           echo "latest_release=$latest_release" >> $GITHUB_OUTPUT
           echo "current_release=$current_release" >> $GITHUB_OUTPUT
