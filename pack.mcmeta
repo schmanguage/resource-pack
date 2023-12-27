@@ -1,7 +1,8 @@
 {
   "pack": {
-    "pack_format": 18,
-    "description": "Schmanguage Pack §6v0.5\n§cBy Kesuaheli"
+    "pack_format": 22,
+    "supported_formats": [18, 22],
+    "description": "Schmanguage Pack §6v0.6\n§cBy Kesuaheli"
   },
   "language": {
     "en_schm": {
