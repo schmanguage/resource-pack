@@ -13,7 +13,7 @@ It is based of the default language "English - United States" (`en_us`).
 
 ## Download
 
-The pack can be downloaded on [Modrinth](https://modrinth.com/schmanguage-resouce-pack).
+The pack can be downloaded on [Modrinth](https://modrinth.com/resourcepack/schmanguage-resource-pack).
 
 ## Credits
 
