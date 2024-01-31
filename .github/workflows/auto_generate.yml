@@ -30,7 +30,7 @@ jobs:
       - name: Get data
         id: data
         run: |
-          curl ${{env.version_manifest}} --output versions.json
+          wget -O versions.json ${{env.version_manifest}}
           latest_release=$(jq --compact-output --join-output .latest.release versions.json)
           current_release=1.20.2
           release_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_release\").url" versions.json)
@@ -51,9 +51,17 @@ jobs:
     if: needs.generate.outputs.latest_release != needs.generate.outputs.current_release
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Version data ${{ needs.generate.outputs.latest_release }}
+        run: |
           echo Hello Release ${{ needs.generate.outputs.latest_release }}
-          echo curl ${{ needs.generate.outputs.release_url }}
+          wget -O release.json ${{ needs.generate.outputs.release_url }}
+          cat release.json
+      - name: Get en_us.json from client
+        run: |
+          wget -O client.jar $(jq --compact-output --join-output release.json .downloads.client.url)
+          unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
+          ls -la
+          cat en_us.json
 
   generate_snapshot:
     name: Generate Snapshot
@@ -61,6 +69,14 @@ jobs:
     if: needs.generate.outputs.latest_snapshot != needs.generate.outputs.current_snapshot
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo Hello Snapshot${{ needs.generate.outputs.latest_snapshot }}
-          echo curl ${{ needs.generate.outputs.snapshot_url }}
+      - name: Version data ${{ needs.generate.outputs.latest_snapshot }}
+        run: |
+          echo Hello Snapshot ${{ needs.generate.outputs.latest_snapshot }}
+          wget -O snapshot.json ${{ needs.generate.outputs.snapshot_url }}
+          cat snapshot.json
+      - name: Get en_us.json from client
+        run: |
+          wget -O client.jar $(jq --compact-output --join-output snapshot.json .downloads.client.url)
+          unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
+          ls -la
+          cat en_us.json
