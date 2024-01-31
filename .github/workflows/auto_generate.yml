@@ -58,7 +58,7 @@ jobs:
           cat release.json
       - name: Get en_us.json from client
         run: |
-          wget -O client.jar $(jq --compact-output --join-output release.json .downloads.client.url)
+          wget -O client.jar $(jq --compact-output --join-output .downloads.client.url release.json)
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
           ls -la
           cat en_us.json
@@ -76,7 +76,7 @@ jobs:
           cat snapshot.json
       - name: Get en_us.json from client
         run: |
-          wget -O client.jar $(jq --compact-output --join-output snapshot.json .downloads.client.url)
+          wget -O client.jar $(jq --compact-output --join-output .downloads.client.url snapshot.json)
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
           ls -la
           cat en_us.json
