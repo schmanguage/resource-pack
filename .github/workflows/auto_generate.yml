@@ -60,6 +60,15 @@ jobs:
         run: |
           wget -O client.jar $(jq --compact-output --join-output .downloads.client.url release.json)
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+      - name: translating using schmanguage-cli
+        run: |
+          git clone https://github.com/schmanguage/schmanguage-cli
+          go build -C schmanguage-cli -o .. .
+          ./schmanguage -type json en_us.json
           ls -la
           cat en_us.json
 
@@ -78,5 +87,14 @@ jobs:
         run: |
           wget -O client.jar $(jq --compact-output --join-output .downloads.client.url snapshot.json)
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+      - name: translating using schmanguage-cli
+        run: |
+          git clone https://github.com/schmanguage/schmanguage-cli
+          go build -C schmanguage-cli -o .. .
+          ./schmanguage -type json en_us.json
           ls -la
           cat en_us.json
