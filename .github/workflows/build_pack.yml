@@ -1,0 +1,40 @@
+name: Build the resource pack
+
+on:
+  workflow_call:
+    inputs:
+      version_url:
+        required: true
+        type: string
+        description: The download url for the Minecraft version json file to build the pack from
+      version_name:
+        required: true
+        type: string
+        description: The name of the Minecraft version
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 'Build the resource pack'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: resource-pack
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.21'
+      - name: Download dependencies
+        run: |
+          git clone https://github.com/schmanguage/schmanguage-cli
+          go build -C schmanguage-cli -o .. .
+
+      - name: Get the version ${{ inputs.version_name }}
+        run: |
+          wget -O version.json ${{ inputs.version_url }}
+          wget -O client.jar $(jq --compact-output --join-output .downloads.client.url version.json)
+      - name: translate en_us
+        run: |
+          unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
+          ./schmanguage --type json en_us.json
+          ls -la
+          cat en_us.json

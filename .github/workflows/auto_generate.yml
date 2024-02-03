@@ -45,56 +45,19 @@ jobs:
           echo "current_snapshot=$current_snapshot" >> $GITHUB_OUTPUT
           echo "snapshot_url=$snapshot_url" >> $GITHUB_OUTPUT
 
-  generate_release:
-    name: Generate Release
+  build_release:
     needs: generate
     if: needs.generate.outputs.latest_release != needs.generate.outputs.current_release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Version data ${{ needs.generate.outputs.latest_release }}
-        run: |
-          echo Hello Release ${{ needs.generate.outputs.latest_release }}
-          wget -O release.json ${{ needs.generate.outputs.release_url }}
-          cat release.json
-      - name: Get en_us.json from client
-        run: |
-          wget -O client.jar $(jq --compact-output --join-output .downloads.client.url release.json)
-          unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.21'
-      - name: translating using schmanguage-cli
-        run: |
-          git clone https://github.com/schmanguage/schmanguage-cli
-          go build -C schmanguage-cli -o .. .
-          ./schmanguage -type json en_us.json
-          ls -la
-          cat en_us.json
+    uses: ./.github/workflows/build_pack.yml
+    with:
+      version_name: ${{ needs.generate.outputs.latest_release }}
+      version_url: ${{ needs.generate.outputs.release_url }}
 
-  generate_snapshot:
-    name: Generate Snapshot
+  build_snapshot:
+    name: Build Snapshot
     needs: generate
     if: needs.generate.outputs.latest_snapshot != needs.generate.outputs.current_snapshot
-    runs-on: ubuntu-latest
-    steps:
-      - name: Version data ${{ needs.generate.outputs.latest_snapshot }}
-        run: |
-          echo Hello Snapshot ${{ needs.generate.outputs.latest_snapshot }}
-          wget -O snapshot.json ${{ needs.generate.outputs.snapshot_url }}
-          cat snapshot.json
-      - name: Get en_us.json from client
-        run: |
-          wget -O client.jar $(jq --compact-output --join-output .downloads.client.url snapshot.json)
-          unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '1.21'
-      - name: translating using schmanguage-cli
-        run: |
-          git clone https://github.com/schmanguage/schmanguage-cli
-          go build -C schmanguage-cli -o .. .
-          ./schmanguage -type json en_us.json
-          ls -la
-          cat en_us.json
+    uses: ./.github/workflows/build_pack.yml
+    with:
+      version_name: ${{ needs.generate.outputs.latest_snapshot }}
+      version_url: ${{ needs.generate.outputs.snapshot_url }}
