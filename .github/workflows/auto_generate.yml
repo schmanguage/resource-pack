@@ -13,20 +13,11 @@ jobs:
     name: Generate
     runs-on: ubuntu-latest
     outputs:
-      latest_release: ${{ steps.data.outputs.latest_release }}
-      current_release: ${{ steps.data.outputs.current_release }}
-      release_url: ${{ steps.data.outputs.release_url }}
-      latest_snapshot: ${{ steps.data.outputs.latest_snapshot }}
-      current_snapshot: ${{ steps.data.outputs.current_snapshot }}
-      snapshot_url: ${{ steps.data.outputs.snapshot_url }}
+      versions: ${{steps.data.outputs.versions}}
     steps:
       - uses: actions/checkout@v4
         with:
           path: resource-pack
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install jq -y
       - name: Get data
         id: data
         run: |
@@ -38,26 +29,17 @@ jobs:
           current_snapshot=0.1
           snapshot_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_snapshot\").url" versions.json)
 
-          echo "latest_release=$latest_release" >> $GITHUB_OUTPUT
-          echo "current_release=$current_release" >> $GITHUB_OUTPUT
-          echo "release_url=$release_url" >> $GITHUB_OUTPUT
-          echo "latest_snapshot=$latest_snapshot" >> $GITHUB_OUTPUT
-          echo "current_snapshot=$current_snapshot" >> $GITHUB_OUTPUT
-          echo "snapshot_url=$snapshot_url" >> $GITHUB_OUTPUT
+          echo 'versions=[{"current":"$current_release","new":"$latest_release","url":"$release_url"},{"current":"$current_snapshot","new":"$latest_snapshot","url":"$snapshot_url"}]' >> $GITHUB_OUTPUT
 
-  build_release:
+  check_version:
+    name: Check Version
     needs: generate
-    if: needs.generate.outputs.latest_release != needs.generate.outputs.current_release
-    uses: ./.github/workflows/build_pack.yml
+    strategy:
+      matrix:
+        release_type: [release, snapshot]
+    uses: ./.github/workflows/check_version.yml
     with:
-      version_name: ${{ needs.generate.outputs.latest_release }}
-      version_url: ${{ needs.generate.outputs.release_url }}
-
-  build_snapshot:
-    name: Build Snapshot
-    needs: generate
-    if: needs.generate.outputs.latest_snapshot != needs.generate.outputs.current_snapshot
-    uses: ./.github/workflows/build_pack.yml
-    with:
-      version_name: ${{ needs.generate.outputs.latest_snapshot }}
-      version_url: ${{ needs.generate.outputs.snapshot_url }}
+      is_full_release: ${{ matrix.release_type == 'release' }}
+      current_version: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].current }}
+      new_version: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].new }}
+      version_url: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].url }}

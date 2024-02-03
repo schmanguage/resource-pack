@@ -4,13 +4,17 @@ on:
   workflow_call:
     inputs:
       version_url:
-        required: true
-        type: string
         description: The download url for the Minecraft version json file to build the pack from
-      version_name:
         required: true
         type: string
-        description: The name of the Minecraft version
+      version_name:
+        description: The name of the Minecraft version to build the pack for
+        required: true
+        type: string
+      is_full_release:
+        description: Type of the release, true for a full release or false for a snapshot
+        required: true
+        type: boolean
 
 jobs:
   build:
