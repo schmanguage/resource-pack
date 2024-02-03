@@ -22,7 +22,7 @@ jobs:
         id: data
         run: |
           wget -O all_versions.json ${{env.version_manifest}}
-          jq --compact-output '.latest as {snapshot: $snap, release: $real} | [ (.versions[] | select(.id == $real)), (.versions[] | select(.id == $snap)) ] | map({current: "", name: .id, url})' all_versions.json > versions.json
+          jq --compact-output '.latest as {snapshot: $snap, release: $real} | [ (.versions[] | select(.id == $real)), (.versions[] | select(.id == $snap)) ] | map({current: "", new: .id, url})' all_versions.json > versions.json
 
           printf '%s%s' "versions=" $(cat versions.json) >> $GITHUB_OUTPUT
 
