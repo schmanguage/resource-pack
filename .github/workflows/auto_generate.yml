@@ -21,15 +21,10 @@ jobs:
       - name: Get data
         id: data
         run: |
-          wget -O versions.json ${{env.version_manifest}}
-          latest_release=$(jq --compact-output --join-output .latest.release versions.json)
-          current_release=1.20.2
-          release_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_release\").url" versions.json)
-          latest_snapshot=$(jq --compact-output --join-output .latest.snapshot versions.json)
-          current_snapshot=0.1
-          snapshot_url=$(jq --compact-output --join-output ".versions[] | select(.id == \"$latest_snapshot\").url" versions.json)
+          wget -O all_versions.json ${{env.version_manifest}}
+          jq --compact-output '.latest as {snapshot: $snap, release: $real} | [ (.versions[] | select(.id == $real)), (.versions[] | select(.id == $snap)) ] | map({current: "", name: .id, url})' all_versions.json > versions.json
 
-          echo 'versions=[{"current":"$current_release","new":"$latest_release","url":"$release_url"},{"current":"$current_snapshot","new":"$latest_snapshot","url":"$snapshot_url"}]' >> $GITHUB_OUTPUT
+          printf '%s%s' "versions=" $(cat versions.json) >> $GITHUB_OUTPUT
 
   check_version:
     name: Check Version
