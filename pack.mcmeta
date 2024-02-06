@@ -1,0 +1,14 @@
+{
+  "pack": {
+    "pack_format": 22,
+    "supported_formats": [18, 22],
+    "description": "Schmanguage Pack\n§cBy Kesuaheli"
+  },
+  "language": {
+    "en_schm": {
+      "name": "Schmenglish",
+      "region": "Schmanguage",
+      "bidirectional": false
+    }
+  }
+}
