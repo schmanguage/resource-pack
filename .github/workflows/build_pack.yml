@@ -41,5 +41,6 @@ jobs:
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
           ./schmanguage --type json en_us.json
           jq '.["language.code"] = (.["language.code"]|split("_")[0]+"_schm") | .["language.region"] = "Schmanguage"' en_us.json > en_schm.json && rm en_us.json
+          go run -C ./resource-pack/langmerge . ../assets/schmanguage/lang/en_schm.json ../../en_schm.json && rm en_schm.json
           ls -la
-          cat en_schm.json
+          cd resource-pack/ && git diff
