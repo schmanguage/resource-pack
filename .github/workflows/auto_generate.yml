@@ -9,32 +9,49 @@ env:
   version_manifest: https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
 
 jobs:
-  generate:
-    name: Generate
+  data:
+    name: Get Version Data
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{steps.data.outputs.versions}}
+      release_changed: ${{steps.get-manifest.outputs.version-release-changed}}
+      release_version: ${{steps.get-manifest.outputs.version-current-release}}
+      release_url: ${{steps.get-url.outputs.version-release-url}}
+      snapshot_changed: ${{steps.get-manifest.outputs.version-release-changed}}
+      snapshot_version: ${{steps.get-manifest.outputs.version-current-snapshot}}
+      snapshot_url: ${{steps.get-url.outputs.version-snapshot-url}}
+    permissions:
+      contents: write
+      actions: read
+      checks: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Get Manifest Data
+        id: get-manifest
+        uses: Datapack-Registry/minecraft-manifest
         with:
-          path: resource-pack
-      - name: Get data
-        id: data
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Temp: Get Version URL'
+        id: get-url
         run: |
           wget -O all_versions.json ${{env.version_manifest}}
-          jq --compact-output '.latest as {snapshot: $snap, release: $real} | [ (.versions[] | select(.id == $real)), (.versions[] | select(.id == $snap)) ] | map({current: "", new: .id, url})' all_versions.json > versions.json
+          printf "version-release-url=%s" $(jq --compact-output '.versions[] | select(.id == ${{ steps.get-manifest.outputs.version-current-release }}).url' versions.json) >> $GITHUB_OUTPUT
+          printf "version-snapshot-url=%s" $(jq --compact-output '.versions[] | select(.id == ${{ steps.get-manifest.outputs.version-current-snapshot }}).url' versions.json) >> $GITHUB_OUTPUT
 
-          printf '%s%s' "versions=" $(cat versions.json) >> $GITHUB_OUTPUT
-
-  check_version:
-    name: Check Version
-    needs: generate
-    strategy:
-      matrix:
-        release_type: [release, snapshot]
-    uses: ./.github/workflows/check_version.yml
+  build_release:
+    name: Build Release Pack
+    needs: data
+    if: ${{ needs.data.outputs.release_changed }}
+    uses: ./.github/workflows/build_pack.yml
     with:
-      is_full_release: ${{ matrix.release_type == 'release' }}
-      current_version: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].current }}
-      new_version: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].new }}
-      version_url: ${{ fromJSON(needs.generate.outputs.versions)[matrix.release_type != 'release'].url }}
+      is_full_release: true
+      version_name: ${{ needs.data.outputs.release_version }}
+      version_url: ${{ needs.data.outputs.release_url }}
+
+  build_snapshot:
+    name: Build Snapshot Pack
+    needs: data
+    if: ${{ needs.data.outputs.snapshot_changed }}
+    uses: ./.github/workflows/build_pack.yml
+    with:
+      is_full_release: false
+      version_name: ${{ needs.data.outputs.snapshot_version }}
+      version_url: ${{ needs.data.outputs.snapshot_url }}
