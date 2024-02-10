@@ -33,8 +33,8 @@ jobs:
         id: get-url
         run: |
           wget -O all_versions.json ${{env.version_manifest}}
-          printf "version-release-url=%s" $(jq --compact-output '.versions[] | select(.id == ${{ steps.get-manifest.outputs.version-current-release }}).url' versions.json) >> $GITHUB_OUTPUT
-          printf "version-snapshot-url=%s" $(jq --compact-output '.versions[] | select(.id == ${{ steps.get-manifest.outputs.version-current-snapshot }}).url' versions.json) >> $GITHUB_OUTPUT
+          printf "version-release-url=%s" $(jq --compact-output '.versions[] | select(.id == "${{ steps.get-manifest.outputs.version-current-release }}").url' versions.json) >> $GITHUB_OUTPUT
+          printf "version-snapshot-url=%s" $(jq --compact-output '.versions[] | select(.id == "${{ steps.get-manifest.outputs.version-current-snapshot }}").url' versions.json) >> $GITHUB_OUTPUT
 
   build_release:
     name: Build Release Pack
