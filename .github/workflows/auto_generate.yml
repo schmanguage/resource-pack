@@ -5,9 +5,6 @@ on:
   push:
     branches: auto-generate
 
-env:
-  version_manifest: https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
-
 jobs:
   data:
     name: Get Version Data
@@ -15,10 +12,10 @@ jobs:
     outputs:
       release_changed: ${{steps.get-manifest.outputs.version-release-changed}}
       release_version: ${{steps.get-manifest.outputs.version-current-release}}
-      release_url: ${{steps.get-url.outputs.version-release-url}}
+      release_url: ${{steps.get-manifest.outputs.version-current-release-url}}
       snapshot_changed: ${{steps.get-manifest.outputs.version-release-changed}}
       snapshot_version: ${{steps.get-manifest.outputs.version-current-snapshot}}
-      snapshot_url: ${{steps.get-url.outputs.version-snapshot-url}}
+      snapshot_url: ${{steps.get-manifest.outputs.version-current-snapshot-url}}
     permissions:
       contents: write
       actions: read
@@ -29,12 +26,6 @@ jobs:
         uses: Datapack-Registry/minecraft-manifest@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'Temp: Get Version URL'
-        id: get-url
-        run: |
-          wget -O versions.json ${{env.version_manifest}}
-          printf "version-release-url=%s" $(jq --compact-output '.versions[] | select(.id == "${{ steps.get-manifest.outputs.version-current-release }}").url' versions.json) >> $GITHUB_OUTPUT
-          printf "version-snapshot-url=%s" $(jq --compact-output '.versions[] | select(.id == "${{ steps.get-manifest.outputs.version-current-snapshot }}").url' versions.json) >> $GITHUB_OUTPUT
 
   build_release:
     name: Build Release Pack
