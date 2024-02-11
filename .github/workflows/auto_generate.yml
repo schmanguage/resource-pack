@@ -30,7 +30,7 @@ jobs:
   build_release:
     name: Build Release Pack
     needs: data
-    if: ${{ needs.data.outputs.release_changed }}
+    if: ${{ needs.data.outputs.release_changed == 'true' }}
     uses: ./.github/workflows/build_pack.yml
     with:
       is_full_release: true
@@ -40,7 +40,7 @@ jobs:
   build_snapshot:
     name: Build Snapshot Pack
     needs: data
-    if: ${{ needs.data.outputs.snapshot_changed }}
+    if: ${{ needs.data.outputs.snapshot_changed == 'true' }}
     uses: ./.github/workflows/build_pack.yml
     with:
       is_full_release: false
