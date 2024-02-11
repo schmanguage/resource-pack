@@ -44,5 +44,9 @@ jobs:
           jq '.["language.code"] = (.["language.code"]|split("_")[0]+"_schm") | .["language.region"] = "Schmanguage"' en_us.json > en_schm.json
           ./schmanguage --type json en_schm.json
           ./langmerge en_us.json resource-pack/assets/schmanguage/lang/en_schm.json en_schm.json && rm en_schm.json
+      - name: update pack format
+        run: |
+          unzip -p client.jar version.json > client_versions.json
+          jq 'input.pack_version.resource as $format | .pack.pack_format = $format | .pack.supported_formats[1] = $format' resource-pack/pack.mcmeta client_versions.json > pack.mcmeta && mv pack.mcmeta resource-pack/pack.mcmeta
           ls -la
           cd resource-pack/ && git diff
