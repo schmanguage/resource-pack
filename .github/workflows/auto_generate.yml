@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build_release:
-    name: Build Release Pack
+    name: Release
     needs: data
     if: ${{ needs.data.outputs.release_changed == 'true' || always() }}
     uses: ./.github/workflows/build_pack.yml
@@ -38,7 +38,7 @@ jobs:
       version_url: ${{ needs.data.outputs.release_url }}
 
   build_snapshot:
-    name: Build Snapshot Pack
+    name: Snapshot
     needs: data
     if: ${{ needs.data.outputs.snapshot_changed == 'true' || always() }}
     uses: ./.github/workflows/build_pack.yml

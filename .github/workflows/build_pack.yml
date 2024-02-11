@@ -19,7 +19,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: 'Build the resource pack'
+    name: 'Build ${{ inputs.version_name }}'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,12 +27,14 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: '1.21'
-      - name: Download dependencies
+      - name: Download and build dependencies
         run: |
+          go build -C resource-pack/langmerge/ -o ../.. .
+
           git clone https://github.com/schmanguage/schmanguage-cli
           go build -C schmanguage-cli -o .. .
 
-      - name: Get the version ${{ inputs.version_name }}
+      - name: Get the ${{ inputs.version_name }} client
         run: |
           wget -O version.json ${{ inputs.version_url }}
           wget -O client.jar $(jq --compact-output --join-output .downloads.client.url version.json)
@@ -41,6 +43,6 @@ jobs:
           unzip -p client.jar assets/minecraft/lang/en_us.json > en_us.json
           ./schmanguage --type json en_us.json
           jq '.["language.code"] = (.["language.code"]|split("_")[0]+"_schm") | .["language.region"] = "Schmanguage"' en_us.json > en_schm.json && rm en_us.json
-          go run -C ./resource-pack/langmerge . ../assets/schmanguage/lang/en_schm.json ../../en_schm.json && rm en_schm.json
+          ./langmerge resource-pack/assets/schmanguage/lang/en_schm.json en_schm.json && rm en_schm.json
           ls -la
           cd resource-pack/ && git diff
