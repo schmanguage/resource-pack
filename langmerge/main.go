@@ -14,25 +14,36 @@ import (
 type orderedMap map[string]string
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Printf("Need exactly two arguments, got %d: '%s'\n", len(os.Args)-1, strings.Join(os.Args[1:], " "))
-		fmt.Printf("%s <base lang> <new lang>\n", os.Args[0])
+	if len(os.Args) != 4 {
+		fmt.Printf("Need exactly three arguments, got %d: '%s'\n", len(os.Args)-1, strings.Join(os.Args[1:], " "))
+		fmt.Printf("%s <default lanf> <base lang> <new lang>\n", os.Args[0])
 		os.Exit(-1)
 	}
 
-	base_file, err := os.ReadFile(os.Args[1])
+	default_file, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		fmt.Printf("Error on 'default lang' read: %v\n", err)
+		os.Exit(-1)
+	}
+	base_file, err := os.ReadFile(os.Args[2])
 	if err != nil {
 		fmt.Printf("Error on 'base lang' read: %v\n", err)
 		os.Exit(-1)
 	}
-	new_file, err := os.ReadFile(os.Args[2])
+	new_file, err := os.ReadFile(os.Args[3])
 	if err != nil {
 		fmt.Printf("Error on 'new lang' read: %v\n", err)
 		os.Exit(-1)
 	}
 
+	default_lang := make(map[string]string)
 	base_lang := make(orderedMap)
 	new_lang := make(map[string]string)
+	err = json.Unmarshal(default_file, &default_lang)
+	if err != nil {
+		fmt.Printf("Error on 'default lang' unmarshal: %v\n", err)
+		os.Exit(-1)
+	}
 	err = json.Unmarshal(base_file, &base_lang)
 	if err != nil {
 		fmt.Printf("Error on 'base lang' unmarshal: %v\n", err)
@@ -48,6 +59,12 @@ func main() {
 		base_lang[k] = v
 	}
 
+	for k, v := range base_lang {
+		if default_lang[k] == v {
+			delete(base_lang, k)
+		}
+	}
+
 	base_file, err = json.MarshalIndent(base_lang, "", "  ")
 	if err != nil {
 		fmt.Printf("Error on json marshal: %v\n", err)
@@ -59,7 +76,7 @@ func main() {
 	base_file = bytes.ReplaceAll(base_file, []byte("\\u003e"), []byte{'\u003e'})
 	base_file = append(base_file, '\n')
 
-	err = os.WriteFile(os.Args[1], base_file, 0644)
+	err = os.WriteFile(os.Args[2], base_file, 0644)
 	if err != nil {
 		fmt.Printf("Error on save file: %v\n", err)
 		os.Exit(-1)
