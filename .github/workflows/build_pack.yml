@@ -15,15 +15,22 @@ on:
         description: Type of the release, true for a full release or false for a snapshot
         required: true
         type: boolean
+    secrets:
+      KESU_BOT_PAT:
+        description: repository token to commit and push to this repo
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: 'Build ${{ inputs.version_name }}'
+    outputs:
+      hasChanges: ${{ steps.changes.outputs.hasChanges }}
     steps:
       - uses: actions/checkout@v4
         with:
           path: resource-pack
+          token: ${{ secrets.KESU_BOT_PAT }}
       - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
@@ -48,5 +55,30 @@ jobs:
         run: |
           unzip -p client.jar version.json > client_versions.json
           jq 'input.pack_version.resource as $format | .pack.pack_format = $format | .pack.supported_formats[1] = $format' resource-pack/pack.mcmeta client_versions.json > pack.mcmeta && mv pack.mcmeta resource-pack/pack.mcmeta
-          ls -la
-          cd resource-pack/ && git diff
+      - name: check for changes
+        id: changes
+        run: |
+          cd resource-pack
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "no changes"
+            echo "hasChanges=false" >> $GITHUB_OUTPUT
+          else
+            echo changes
+            echo "hasChanges=true" >> $GITHUB_OUTPUT
+            git diff
+          fi
+      - name: commit pack
+        if: ${{ steps.changes.outputs.hasChanges == 'true' }}
+        run: |
+          cd resource-pack
+          git config user.name "Kesuaheli Bot"
+          git config user.email "150326642+kesuaheli-bot@users.noreply.github.com"
+          git commit -am "generated ${{ inputs.version_name }}"
+          git push
+  upload:
+    needs: build
+    if: ${{ needs.build.outputs.hasChanges == 'true' }}
+    runs-on: ubuntu-latest
+    name: 'Upload ${{ inputs.version_name }}'
+    steps:
+      - uses: actions/checkout@v4
