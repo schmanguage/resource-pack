@@ -13,7 +13,7 @@ jobs:
       release_changed: ${{steps.get-manifest.outputs.version-release-changed}}
       release_version: ${{steps.get-manifest.outputs.version-current-release}}
       release_url: ${{steps.get-manifest.outputs.version-current-release-url}}
-      snapshot_changed: ${{steps.get-manifest.outputs.version-release-changed}}
+      snapshot_changed: ${{steps.get-manifest.outputs.version-snapshot-changed}}
       snapshot_version: ${{steps.get-manifest.outputs.version-current-snapshot}}
       snapshot_url: ${{steps.get-manifest.outputs.version-current-snapshot-url}}
     permissions:
