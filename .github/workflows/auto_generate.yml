@@ -1,7 +1,9 @@
-name: Auto Generate
+name: Tick
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
 
 jobs:
   data:
