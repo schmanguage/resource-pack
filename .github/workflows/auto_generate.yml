@@ -2,8 +2,6 @@ name: Auto Generate
 
 on:
   workflow_dispatch:
-  push:
-    branches: auto-generate
 
 jobs:
   data:
