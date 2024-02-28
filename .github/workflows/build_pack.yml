@@ -83,6 +83,9 @@ jobs:
     name: 'Upload ${{ inputs.version_name }}'
     steps:
       - uses: actions/checkout@v4
+      - name: update branch
+        run: |
+          git fetch && git pull
 
       - name: Zipping the pack
         run: >
