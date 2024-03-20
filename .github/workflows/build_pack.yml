@@ -15,6 +15,10 @@ on:
         description: Type of the release, true for a full release or false for a snapshot
         required: true
         type: boolean
+    outputs:
+      hasChanges:
+        description: Whether this version brought some changes to schmanguage
+        value: ${{ jobs.build.outputs.hasChanges }}
     secrets:
       KESU_BOT_PAT:
         description: repository token to commit and push to this repo
@@ -83,9 +87,14 @@ jobs:
     name: 'Upload ${{ inputs.version_name }}'
     steps:
       - uses: actions/checkout@v4
-      - name: update branch
+        with:
+          ref: auto-generate
+      - name: get commit sha
+
+        id: getCommit
         run: |
-          git fetch && git pull
+          git rev-parse HEAD
+          echo sha=$(git rev-parse HEAD) >> $GITHUB_OUTPUT
 
       - name: Zipping the pack
         run: >
@@ -110,6 +119,7 @@ jobs:
         with:
           tag_name: ${{ inputs.version_name }}
           release_name: ${{ inputs.is_full_release && 'Release' || 'Snapshot'}} ${{ inputs.version_name }}
+          commit: ${{ steps.getCommit.outputs.sha }}
           prerelease: ${{ !inputs.is_full_release }}
 
       - name: Upload release asset
