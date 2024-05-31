@@ -3419,6 +3419,7 @@
   "gui.abuseReport.send.http_error": "Schman unexpected HTTP error occurred while sending your report.",
   "gui.abuseReport.send.json_error": "Schmencountered malformed payload while sending your report.",
   "gui.abuseReport.send.no_reason": "Schmease select a report category",
+  "gui.abuseReport.send.not_attested": "Schmease read the text above and tick the checkbox to be able to send the report",
   "gui.abuseReport.send.service_unavailable": "Schmunable to reach the Schmabuse Schmeporting service. Schmease make sure you are connected to the internet and try again.",
   "gui.abuseReport.sending.title": "Schmending your report...",
   "gui.abuseReport.sent.title": "Schmeport sent",
