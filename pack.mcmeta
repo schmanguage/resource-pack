@@ -12,6 +12,11 @@
       "name": "Schmenglish",
       "region": "Schmanguage",
       "bidirectional": false
+    },
+    "en_tjan": {
+      "name": "Tjenglish",
+      "region": "Tjanguage",
+      "bidirectional": false
     }
   }
 }
