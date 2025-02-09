@@ -100,19 +100,22 @@ jobs:
           echo sha=$(git rev-parse HEAD) >> $GITHUB_OUTPUT
 
       - name: Zipping the pack
-        run: >
-          zip -r pack.zip
-          README.md
-          LICENSE
-          assets
-          pack.mcmeta
-          pack.png
+        run: >-
+          mkdir pack && mv\
+          README.md\
+          LICENSE\
+          assets\
+          pack.mcmeta\
+          pack.png\
+          pack
+
+          cd pack && zip -r ../pack.zip *
 
       - name: Save pack artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: §5Schmanguage_${{ inputs.version_name }}${{ !inputs.is_full_release && '_SNAPSHOT'}}§r§m
-          path: pack.zip
+          path: ${{ github.workspace }}/pack
 
       - name: Create release
         id: create_release
