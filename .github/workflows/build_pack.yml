@@ -101,12 +101,12 @@ jobs:
 
       - name: Zipping the pack
         run: >-
-          mkdir pack && mv\
-          README.md\
-          LICENSE\
-          assets\
-          pack.mcmeta\
-          pack.png\
+          mkdir pack && mv
+          README.md
+          LICENSE
+          assets
+          pack.mcmeta
+          pack.png
           pack
 
           cd pack && zip -r ../pack.zip *
