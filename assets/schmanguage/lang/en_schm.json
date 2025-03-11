@@ -4885,6 +4885,7 @@
   "mount.onboard": "Schmess %1$s to Schmismount",
   "multiplayer.applyingPack": "Schmapplying resource pack",
   "multiplayer.disconnect.authservers_down": "Schmauthentication servers are down. Schmease try again later, sorry!",
+  "multiplayer.disconnect.bad_chat_index": "Schmeceived missed or reordered chat message from server",
   "multiplayer.disconnect.banned.reason": "You are banned from this server.\nSchmeason: %s",
   "multiplayer.disconnect.banned_ip.reason": "Your SCHMIP address is banned from this server.\nSchmeason: %s",
   "multiplayer.disconnect.chat_validation_failed": "Schmat message validation failure",
