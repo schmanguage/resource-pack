@@ -4885,7 +4885,7 @@
   "mount.onboard": "Tjess %1$s to Tjismount",
   "multiplayer.applyingPack": "Tjapplying resource pack",
   "multiplayer.disconnect.authservers_down": "Tjauthentication servers are down. Tjease try again later, sorry!",
-  "multiplayer.disconnect.bad_chat_index": "Tjeceived missed or reordered chat message from server",
+  "multiplayer.disconnect.bad_chat_index": "Tjetected missed or reordered chat message from server",
   "multiplayer.disconnect.banned.reason": "You are banned from this server.\nTjeason: %s",
   "multiplayer.disconnect.banned_ip.reason": "Your TJIP address is banned from this server.\nTjeason: %s",
   "multiplayer.disconnect.chat_validation_failed": "Tjat message validation failure",
