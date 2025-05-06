@@ -1,9 +1,9 @@
 {
   "pack": {
-    "pack_format": 59,
+    "pack_format": 60,
     "supported_formats": [
       18,
-      59
+      60
     ],
     "description": "Schmanguage Pack\n§cBy Kesuaheli"
   },
