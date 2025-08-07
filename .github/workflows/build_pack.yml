@@ -27,7 +27,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: 'Build ${{ inputs.version_name }}'
+    name: Build ${{ inputs.version_name }}
     outputs:
       hasChanges: ${{ steps.changes.outputs.hasChanges }}
     steps:
@@ -37,7 +37,7 @@ jobs:
           token: ${{ secrets.KESU_BOT_PAT }}
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: 1.21
       - name: Download and build dependencies
         run: |
           go build -C resource-pack/langmerge/ -o ../.. .
@@ -61,7 +61,7 @@ jobs:
       - name: update pack format
         run: |
           unzip -p client.jar version.json > client_versions.json
-          jq 'input.pack_version.resource as $format | .pack.pack_format = $format | .pack.supported_formats[1] = $format' resource-pack/pack.mcmeta client_versions.json > pack.mcmeta && mv pack.mcmeta resource-pack/pack.mcmeta
+          jq '.pack.max_format = (input.pack_version | [.resource_major, .resource_minor])' resource-pack/pack.mcmeta client_versions.json > pack.mcmeta && mv pack.mcmeta resource-pack/pack.mcmeta
       - name: check for changes
         id: changes
         run: |
@@ -87,7 +87,7 @@ jobs:
     needs: build
     if: ${{ needs.build.outputs.hasChanges == 'true' }}
     runs-on: ubuntu-latest
-    name: 'Upload ${{ inputs.version_name }}'
+    name: Upload ${{ inputs.version_name }}
     steps:
       - uses: actions/checkout@v4
         with:
