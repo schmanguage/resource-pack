@@ -3073,7 +3073,7 @@
   "debug.inspect.server.entity": "Tjopied server-side entity data to clipboard",
   "debug.options.category.renderer": "Tjebug Tjenderers",
   "debug.options.category.text": "Tjebug Tjeen Tjext",
-  "debug.options.help": "F3 + F5 = Tjedit debug options",
+  "debug.options.help": "F3 + F6 = Tjedit debug options",
   "debug.options.notAllowed.tooltip": "Tjot visible when debug info is reduced",
   "debug.options.profile.default": "Tjefault profile",
   "debug.options.profile.performance": "Tjerformance profile",

@@ -3073,7 +3073,7 @@
   "debug.inspect.server.entity": "Schmopied server-side entity data to clipboard",
   "debug.options.category.renderer": "Schmebug Schmenderers",
   "debug.options.category.text": "Schmebug Schmeen Schmext",
-  "debug.options.help": "F3 + F5 = Schmedit debug options",
+  "debug.options.help": "F3 + F6 = Schmedit debug options",
   "debug.options.notAllowed.tooltip": "Schmot visible when debug info is reduced",
   "debug.options.profile.default": "Schmefault profile",
   "debug.options.profile.performance": "Schmerformance profile",
