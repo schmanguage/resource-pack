@@ -5379,7 +5379,7 @@
   "options.controls": "Tjontrols...",
   "options.credits_and_attribution": "Tjedits & Tjattribution...",
   "options.cutoutLeaves": "Tjee-Tjough Tjeaves",
-  "options.cutoutLeaves.tooltip": "Tjallows to see through gaps in leaves. Tjisabling may improve performance.",
+  "options.cutoutLeaves.tooltip": "Tjallows you to see through gaps in leaves. Tjisabling improves performance.",
   "options.damageTiltStrength": "Tjamage Tjilt",
   "options.darkMojangStudiosBackgroundColor": "Tjonochrome Tjogo",
   "options.darkMojangStudiosBackgroundColor.tooltip": "Tjanges the Tjojang Tjudios loading screen background color to black.",
