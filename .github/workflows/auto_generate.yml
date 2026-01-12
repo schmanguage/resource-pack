@@ -14,44 +14,62 @@ jobs:
   data:
     name: Get Version Data
     runs-on: ubuntu-latest
+    env:
+      version_manifest: https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
+
     outputs:
-      release_changed: ${{steps.get-manifest.outputs.version-release-changed}}
-      release_version: ${{steps.get-manifest.outputs.version-current-release}}
-      release_url: ${{steps.get-manifest.outputs.version-current-release-url}}
-      snapshot_changed: ${{steps.get-manifest.outputs.version-snapshot-changed}}
-      snapshot_version: ${{steps.get-manifest.outputs.version-current-snapshot}}
-      snapshot_url: ${{steps.get-manifest.outputs.version-current-snapshot-url}}
-    permissions:
-      contents: write
-      actions: read
-      checks: write
+      versions: ${{steps.data.outputs.versions}}
     steps:
-      - name: Get Manifest Data
-        id: get-manifest
-        uses: Datapack-Registry/minecraft-manifest@main
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Get data
+        id: data
+        run: |
+          curl --silent ${{env.version_manifest}} | jq --compact-output '.versions as $versions | reduce(.latest | to_entries[]) as $entry (
+            {};
+            . + {
+              ($entry.key) :
+              ($versions[] | select(.id == $entry.value) | {
+                name: .id,
+                url: .url,
+                exists: false
+              } )
+            }
+          )' > versions.json
+
+          for version in $(jq --raw-output 'keys[]' versions.json); do
+            echo "Checking ${version} version..."
+            if [ $(git tag -l "$(jq --raw-output --arg version $version '.[$version].name' versions.json)") ]; then
+              jq --arg version $version '.[$version].exists = true' versions.json > .versions.json.tmp && mv .versions.json.tmp versions.json
+              echo "Tag exists"
+            else
+              echo "Tag does not exist"
+            fi
+          done
+
+          printf '%s%s' "versions=" $(cat versions.json) >> $GITHUB_OUTPUT
 
   build_release:
     name: Release
     needs: data
-    if: ${{ needs.data.outputs.release_changed == 'true' }}
+    if: ${{ !(inputs.force_update || fromJson(needs.data.outputs.versions).release.exists) }}
     uses: ./.github/workflows/build_pack.yml
     with:
       is_full_release: true
-      version_name: ${{ needs.data.outputs.release_version }}
-      version_url: ${{ needs.data.outputs.release_url }}
+      version_name: ${{ fromJson(needs.data.outputs.versions).release.name }}
+      version_url: ${{ fromJson(needs.data.outputs.versions).release.url }}
     secrets:
       KESU_BOT_PAT: ${{ secrets.KESU_BOT_PAT }}
 
   build_snapshot:
     name: Snapshot
     needs: data
-    if: ${{ (inputs.force_update || needs.data.outputs.snapshot_changed == 'true' && needs.data.outputs.release_changed != 'true') }}
+    if: ${{ (inputs.force_update || !fromJson(needs.data.outputs.versions).snapshot.exists && fromJson(needs.data.outputs.versions).release.exists) }}
     uses: ./.github/workflows/build_pack.yml
     with:
       is_full_release: false
-      version_name: ${{ needs.data.outputs.snapshot_version }}
-      version_url: ${{ needs.data.outputs.snapshot_url }}
+      version_name: ${{ fromJson(needs.data.outputs.versions).snapshot.name }}
+      version_url: ${{ fromJson(needs.data.outputs.versions).snapshot.url }}
     secrets:
       KESU_BOT_PAT: ${{ secrets.KESU_BOT_PAT }}
