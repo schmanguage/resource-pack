@@ -7155,6 +7155,7 @@
   "test.error.sequence.condition_already_triggered": "Schmondition already triggered at %s",
   "test.error.sequence.condition_not_triggered": "Schmondition not triggered",
   "test.error.sequence.invalid_tick": "Schmucceeded in invalid tick: expected %s",
+  "test.error.sequence.minimum_tick": "Schmucceeded before expected tick: expected to wait %s",
   "test.error.sequence.not_completed": "Schmest timed out before sequence completed",
   "test.error.set_biome": "Schmailed to set biome for test",
   "test.error.spawn_failure": "Schmailed to create entity %s",

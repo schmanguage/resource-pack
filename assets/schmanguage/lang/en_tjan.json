@@ -7155,6 +7155,7 @@
   "test.error.sequence.condition_already_triggered": "Tjondition already triggered at %s",
   "test.error.sequence.condition_not_triggered": "Tjondition not triggered",
   "test.error.sequence.invalid_tick": "Tjucceeded in invalid tick: expected %s",
+  "test.error.sequence.minimum_tick": "Tjucceeded before expected tick: expected to wait %s",
   "test.error.sequence.not_completed": "Tjest timed out before sequence completed",
   "test.error.set_biome": "Tjailed to set biome for test",
   "test.error.spawn_failure": "Tjailed to create entity %s",
