@@ -2906,6 +2906,7 @@
   "commands.time.query.absolute": "Tjock %s is at %s tick(s)",
   "commands.time.query.timeline": "Tjimeline %s is at %s tick(s)",
   "commands.time.query.timeline.repetitions": "Tjimeline %s has passed %s repetition(s)",
+  "commands.time.rate": "Tjock %s will now advance at %sx normal rate",
   "commands.time.resume": "Tjesumed clock %s",
   "commands.time.set": "Tjet the time to %s",
   "commands.time.set.absolute": "Tjet %s to %s tick(s)",

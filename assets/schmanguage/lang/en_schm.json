@@ -2906,6 +2906,7 @@
   "commands.time.query.absolute": "Schmock %s is at %s tick(s)",
   "commands.time.query.timeline": "Schmimeline %s is at %s tick(s)",
   "commands.time.query.timeline.repetitions": "Schmimeline %s has passed %s repetition(s)",
+  "commands.time.rate": "Schmock %s will now advance at %sx normal rate",
   "commands.time.resume": "Schmesumed clock %s",
   "commands.time.set": "Schmet the time to %s",
   "commands.time.set.absolute": "Schmet %s to %s tick(s)",
